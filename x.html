@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard — Toserba Digital</title>
+<script src="https://cdn.tailwindcss.com"></script>
+
+<style>
+  :root {
+    --bg: #f8f5f2;
+    --card: #ffffff;
+    --headline: #232323;
+    --paragraph: #222525;
+    --button: #078080;
+    --button-text: #ffffff;
+    --stroke: #232323;
+    --main: #ffffff;
+    --line: var(--stroke);
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--headline);
+  }
+
+  .brutal {
+    border: 3px solid var(--line);
+    box-shadow: 6px 6px 0 var(--line);
+  }
+
+  .nav-brutal {
+    border-bottom: 3px solid var(--line);
+    box-shadow: 0 4px 0 var(--line);
+  }
+
+  input, select {
+    background: var(--main);
+    color: var(--headline);
+    border-color: var(--stroke);
+  }
+
+  button {
+    background: var(--button);
+    color: var(--button-text);
+    font-weight: bold;
+    transition: 0.15s ease;
+  }
+
+  button:hover {
+    transform: translateY(-3px);
+    box-shadow: 4px 4px 0 var(--line);
+  }
+
+  button:active {
+    transform: translateY(2px);
+    box-shadow: 2px 2px 0 var(--line);
+  }
+
+  @media(max-width:480px){
+    .grid-prod { grid-template-columns: 1fr !important; }
+  }
+</style>
+</head>
+
+<body>
+
+<!-- NAV -->
+<nav class="bg-[#078080] text-white px-5 py-4 nav-brutal flex justify-between items-center">
+  <h1 class="text-2xl font-extrabold uppercase">Dashboard</h1>
+
+  <div class="flex gap-4">
+    <a href="index.html" class="brutal bg-white text-[#078080] px-3 py-2 font-bold text-sm">Home</a>
+    <a href="food.html" class="underline font-bold text-sm">Makanan</a>
+  </div>
+</nav>
+
+<!-- KATEGORI CRUD -->
+<div class="max-w-3xl mx-auto bg-[var(--card)] brutal mt-6 p-6">
+  <h2 class="text-xl font-extrabold mb-4 uppercase">Kelola Kategori</h2>
+
+  <div class="flex gap-2 mb-3">
+    <input id="newKategori" placeholder="Tambah kategori baru"
+      class="brutal px-3 py-2 w-full text-sm">
+    <button onclick="tambahKategori()" class="brutal px-4 py-2 text-xs font-bold">TAMBAH</button>
+  </div>
+
+  <ul id="kategoriListUI" class="space-y-2 text-sm"></ul>
+</div>
+
+<!-- PRODUK FORM -->
+<div class="max-w-3xl mx-auto bg-[var(--card)] brutal mt-6 p-6">
+  <h2 class="text-xl font-extrabold mb-4 uppercase">Tambah Produk</h2>
+
+  <input id="nama" placeholder="Nama Produk" class="w-full brutal px-3 py-2 mb-3 text-sm" />
+  <input id="deskripsi" placeholder="Deskripsi" class="w-full brutal px-3 py-2 mb-3 text-sm" />
+
+  <select id="kategori" class="w-full brutal px-3 py-2 mb-3 text-sm"></select>
+
+  <label class="font-bold mb-1 block">Upload Foto Produk:</label>
+  <input type="file" id="foto" accept="image/*" class="mb-4 text-sm" />
+
+  <!-- PAKET -->
+  <div class="bg-[var(--bg)] brutal p-4 mb-4">
+    <h3 class="text-sm font-bold mb-2 uppercase">Tambah Paket</h3>
+
+    <div class="flex gap-2 mb-2">
+      <input id="paketNama" placeholder="Nama Paket"
+        class="brutal px-2 py-2 w-1/2 text-sm" />
+      <input id="paketHarga" type="number" placeholder="Harga"
+        class="brutal px-2 py-2 w-1/2 text-sm" />
+    </div>
+
+    <button onclick="tambahPaket()" class="brutal px-3 py-2 text-xs font-bold">Tambah Paket</button>
+
+    <ul id="listPaket" class="mt-3 text-sm space-y-2"></ul>
+  </div>
+
+  <button onclick="simpanProduk()"
+    class="w-full brutal py-3 font-bold text-sm uppercase">Simpan Produk</button>
+</div>
+
+<!-- LIST PRODUK -->
+<div id="produkList"
+  class="max-w-5xl mx-auto px-5 py-10 grid grid-cols-2 gap-6 grid-prod"></div>
+
+<script>
+/* ============ KATEGORI CRUD ============ */
+let kategoriList = JSON.parse(localStorage.getItem("kategoriList")) || [];
+if (kategoriList.length === 0) {
+  kategoriList = ["Streaming", "Games", "Makanan", "Music", "Tools"];
+  localStorage.setItem("kategoriList", JSON.stringify(kategoriList));
+}
+
+function renderKategori() {
+  const wrap = document.getElementById("kategoriListUI");
+  wrap.innerHTML = kategoriList
+    .map((k,i)=>`
+      <li class="flex justify-between brutal bg-[var(--main)] px-3 py-2">
+        <span>${k}</span>
+        <div class="flex gap-2">
+          <button onclick="editKategori(${i})" class="text-blue-500 font-bold">Edit</button>
+          <button onclick="hapusKategori(${i})" class="text-red-500 font-bold">Hapus</button>
+        </div>
+      </li>
+    `)
+    .join("");
+
+  updateKategoriDropdown();
+}
+
+function tambahKategori() {
+  let val = document.getElementById("newKategori").value.trim();
+  if (!val) return alert("Kategori tidak boleh kosong!");
+  if (kategoriList.includes(val)) return alert("Kategori sudah ada!");
+
+  kategoriList.push(val);
+  localStorage.setItem("kategoriList", JSON.stringify(kategoriList));
+  document.getElementById("newKategori").value = "";
+  renderKategori();
+}
+
+function hapusKategori(i) {
+  if (!confirm("Hapus kategori?")) return;
+  kategoriList.splice(i, 1);
+  localStorage.setItem("kategoriList", JSON.stringify(kategoriList));
+  renderKategori();
+}
+
+function editKategori(i) {
+  let baru = prompt("Nama baru:", kategoriList[i]);
+  if (!baru) return;
+  kategoriList[i] = baru.trim();
+  localStorage.setItem("kategoriList", JSON.stringify(kategoriList));
+  renderKategori();
+}
+
+function updateKategoriDropdown() {
+  document.getElementById("kategori").innerHTML =
+    `<option value="">Pilih Kategori</option>` +
+    kategoriList.map(k=>`<option>${k}</option>`).join("");
+}
+
+/* ============ PRODUK CRUD ============ */
+let produk = JSON.parse(localStorage.getItem("produk")) || [];
+let paketTemp = [];
+
+function tambahPaket() {
+  let n = document.getElementById("paketNama").value;
+  let h = document.getElementById("paketHarga").value;
+  if (!n || !h) return alert("Nama dan harga wajib!");
+
+  paketTemp.push({ nama:n, harga:h });
+  renderTempPaket();
+}
+
+function renderTempPaket() {
+  document.getElementById("listPaket").innerHTML =
+    paketTemp.map((p,i)=>`
+      <li class="flex justify-between brutal bg-[var(--main)] px-3 py-2 text-xs">
+        <span>${p.nama} — Rp ${p.harga}</span>
+        <button onclick="hapusTempPaket(${i})" class="text-red-500 font-bold">X</button>
+      </li>
+    `).join("");
+}
+
+function hapusTempPaket(i) {
+  paketTemp.splice(i,1);
+  renderTempPaket();
+}
+
+function simpanProduk() {
+  let nama = document.getElementById("nama").value;
+  let desk = document.getElementById("deskripsi").value;
+  let kategori = document.getElementById("kategori").value;
+  let foto = document.getElementById("foto").files[0];
+
+  if (!nama || !desk || !kategori || paketTemp.length === 0)
+    return alert("Isi semua field!");
+
+  if (foto) {
+    let reader = new FileReader();
+    reader.onload = () => {
+      produk.push({
+        id: Date.now(),
+        nama,
+        deskripsi: desk,
+        kategori,
+        paket: JSON.parse(JSON.stringify(paketTemp)),
+        foto: reader.result
+      });
+      saveProduk();
+    };
+    reader.readAsDataURL(foto);
+  } else {
+    produk.push({
+      id: Date.now(),
+      nama,
+      deskripsi: desk,
+      kategori,
+      paket: JSON.parse(JSON.stringify(paketTemp)),
+      foto: ""
+    });
+    saveProduk();
+  }
+}
+
+function saveProduk() {
+  localStorage.setItem("produk", JSON.stringify(produk));
+  paketTemp = [];
+  renderTempPaket();
+  renderProduk();
+}
+
+function editProduk(id) {
+  let p = produk.find(x=>x.id===id);
+
+  let n = prompt("Nama baru:", p.nama); if(n) p.nama=n;
+  let d = prompt("Deskripsi baru:", p.deskripsi); if(d) p.deskripsi=d;
+  let k = prompt("Kategori baru:", p.kategori); if(k) p.kategori=k;
+
+  localStorage.setItem("produk", JSON.stringify(produk));
+  renderProduk();
+}
+
+function hapusProduk(id) {
+  if (!confirm("Hapus produk?")) return;
+  produk = produk.filter(p=>p.id!==id);
+  localStorage.setItem("produk", JSON.stringify(produk));
+  renderProduk();
+}
+
+function duplicateProduk(id) {
+  let p = produk.find(x=>x.id===id);
+  produk.push({ ...p, id: Date.now() });
+  localStorage.setItem("produk", JSON.stringify(produk));
+  renderProduk();
+}
+
+function editPaket(id, idx) {
+  let p = produk.find(x=>x.id===id);
+  let pk = p.paket[idx];
+
+  let nm = prompt("Nama paket baru:", pk.nama); if(nm) pk.nama=nm;
+  let hr = prompt("Harga baru:", pk.harga); if(hr) pk.harga=hr;
+
+  localStorage.setItem("produk", JSON.stringify(produk));
+  renderProduk();
+}
+
+function renderProduk() {
+  const el = document.getElementById("produkList");
+  el.innerHTML = "";
+
+  produk.forEach(p=>{
+    let fotoHTML = p.foto ?
+      `<img src="${p.foto}" class="w-full h-40 object-cover brutal mb-3">` : "";
+
+    let paketList = p.paket.map((pk,idx)=>`
+      <div class="brutal bg-[var(--main)] px-2 py-2 flex justify-between text-xs">
+        <span>${pk.nama} — Rp ${pk.harga}</span>
+        <button onclick="editPaket(${p.id},${idx})"
+          class="text-blue-500 font-bold">Edit</button>
+      </div>
+    `).join("");
+
+    el.innerHTML += `
+      <div class="brutal bg-[var(--card)] p-4">
+
+        ${fotoHTML}
+
+        <h3 class="font-extrabold text-sm uppercase">${p.nama}</h3>
+        <p class="text-xs">${p.deskripsi}</p>
+        <p class="text-[10px] opacity-70 mb-3">Kategori: <b>${p.kategori}</b></p>
+
+        <div class="space-y-2 mb-3">${paketList}</div>
+
+        <div class="grid grid-cols-3 gap-2 text-xs font-bold">
+          <button onclick="editProduk(${p.id})" class="brutal py-2">EDIT</button>
+          <button onclick="duplicateProduk(${p.id})" class="brutal py-2 bg-[var(--main)] text-[var(--headline)]">COPY</button>
+          <button onclick="hapusProduk(${p.id})" class="brutal py-2 bg-red-500 text-white">HAPUS</button>
+        </div>
+      </div>
+    `;
+  });
+}
+
+/* INIT */
+renderKategori();
+renderProduk();
+</script>
+
+</body>
+</html>
