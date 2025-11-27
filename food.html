@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Makanan Murah — Toserba Digital</title>
+<script src="https://cdn.tailwindcss.com"></script>
+
+<style>
+  :root {
+    --bg: #eff0f3;
+    --card: #fffffe;
+    --text: #0d0d0d;
+    --border: #0d0d0d;
+    --orange: #ff8e3c;
+    --pink: #d9376e;
+  }
+
+  body { 
+    background: var(--bg); 
+    color: var(--text);
+    padding-bottom: 80px; 
+  }
+
+  .brutal {
+    border: 3px solid var(--border);
+    box-shadow: 6px 6px 0 var(--border);
+  }
+
+  /* BUTTON PESAN ORANGE */
+  .pesan-btn {
+    background: var(--orange) !important;
+    color: #fffffe !important;
+    font-weight: bold;
+    border: 3px solid var(--border) !important;
+    box-shadow: 4px 4px 0 var(--border) !important;
+    transition: 0.15s ease !important;
+  }
+  .pesan-btn:hover {
+    transform: translateY(-3px) !important;
+    box-shadow: 6px 6px 0 var(--border) !important;
+  }
+  .pesan-btn:active {
+    transform: translateY(2px) !important;
+    box-shadow: 2px 2px 0 var(--border) !important;
+  }
+
+  /* NAVBAR PULSE */
+  @keyframes pulseDuo {
+    0% { transform: scale(1); background: var(--orange); }
+    50% { transform: scale(1.08); background: var(--pink); }
+    100% { transform: scale(1); background: var(--orange); }
+  }
+  .pulse {
+    animation: pulseDuo 1.2s infinite ease-in-out;
+  }
+
+  /* FOOTER */
+  footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: var(--pink);
+    color: #ffffff;
+    text-align: center;
+    padding: 10px 0;
+    font-weight: bold;
+    border-top: 3px solid var(--border);
+    box-shadow: 0 -4px 0 var(--border);
+    z-index: 50;
+  }
+</style>
+
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<div class="bg-[var(--pink)] text-white py-4 brutal">
+  <nav class="max-w-6xl mx-auto px-5 flex justify-between items-center">
+    <div>
+      <h1 class="text-xl font-extrabold uppercase">TOSERBA DIGITAL</h1>
+      <p class="text-[12px] opacity-90 -mt-1 uppercase">MAKANAN MURAH</p>
+    </div>
+
+    <a href="index.html"
+       class="brutal text-white px-3 py-2 font-bold text-sm pulse">
+       Aplikasi Premium
+    </a>
+  </nav>
+</div>
+
+<!-- SEARCH + FILTER -->
+<div class="max-w-6xl mx-auto px-5 py-4 flex gap-3 flex-col sm:flex-row">
+  <input id="search" type="text" placeholder="Cari makanan..."
+    class="brutal px-3 py-2 text-sm flex-1" oninput="renderFood()" />
+
+  <select id="filterKategori"
+    class="brutal px-3 py-2 text-sm w-full sm:w-52"
+    onchange="renderFood()"></select>
+</div>
+
+<!-- PRODUK GRID -->
+<div id="produkList"
+  class="max-w-6xl mx-auto px-5 py-6 grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-6"></div>
+
+<script>
+let produk = JSON.parse(localStorage.getItem("produk")) || [];
+let kategoriList = JSON.parse(localStorage.getItem("kategoriList")) || [];
+
+document.getElementById("filterKategori").innerHTML =
+  `<option value="">Semua</option>` +
+  kategoriList.map(k => `<option>${k}</option>`).join("");
+
+function renderFood() {
+  const wrap = document.getElementById("produkList");
+  wrap.innerHTML = "";
+
+  const searchVal = document.getElementById("search").value.toLowerCase();
+  const kategoriFilter = document.getElementById("filterKategori").value;
+
+  let makanan = produk.filter(
+    p =>
+      p.kategori.toLowerCase() === "makanan" &&
+      p.nama.toLowerCase().includes(searchVal) &&
+      (kategoriFilter === "" || p.kategori === kategoriFilter)
+  );
+
+  makanan.forEach((p, idx) => {
+
+    let foto = p.foto
+      ? `<img src="${p.foto}" class="w-full h-40 object-cover brutal mb-3">`
+      : "";
+
+    let opsi = p.paket.map(pk =>
+      `<option>${pk.nama} — Rp ${pk.harga}</option>`
+    ).join("");
+
+    wrap.innerHTML += `
+      <div class="brutal bg-[var(--card)] p-3">
+
+        ${foto}
+
+        <h3 class="font-extrabold text-sm uppercase">${p.nama}</h3>
+        <p class="text-xs mt-1 mb-1">${p.deskripsi}</p>
+
+        <select id="paket_${idx}" class="brutal px-2 py-1 w-full text-xs">
+          ${opsi}
+        </select>
+
+        <button class="brutal pesan-btn w-full mt-3 py-2 text-xs font-bold"
+                onclick="pesan('${p.nama}', 'paket_${idx}')">
+          PESAN
+        </button>
+
+      </div>
+    `;
+  });
+}
+
+function pesan(namaProduk, paketID) {
+  const val = document.getElementById(paketID).value;
+  const url =
+    `https://wa.me/6287775787888?text=` +
+    encodeURIComponent(`Halo saya mau pesan ${namaProduk} (${val})`);
+  window.open(url, "_blank");
+}
+
+renderFood();
+</script>
+
+<!-- FOOTER -->
+<footer class="brutal">
+  Toserba Digital © 2025
+</footer>
+
+</body>
+</html>
