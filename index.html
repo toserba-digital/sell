@@ -1,235 +1,181 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>TOSERBA DIGITAL</title>
-  <meta name="description" content="TOSERBA DIGITAL - Langganan digital & hiburan lengkap" />
-  <link rel="icon" type="image/png" href="logo.jpg" />
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          fontFamily: { sans: ['Inter', 'Segoe UI', 'system-ui'] },
-          colors: {
-            navy: '#1e3a8a',
-            soft: '#f9fafb',
-            accent: '#00d4ff',
-            border: '#111827',
-          }
-        }
-      }
-    }
-  </script>
-  <style>
-    body {
-      background: linear-gradient(to bottom right, #eef2ff, #f9fafb);
-      color: #111827;
-      font-family: 'Inter', sans-serif;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Toserba Digital</title>
+<script src="https://cdn.tailwindcss.com"></script>
 
-    /* Header */
-    header {
-      background: linear-gradient(135deg, #1e3a8a, #312e81);
-      color: white;
-      text-align: center;
-      padding: 2.5rem 1rem;
-    }
+<style>
+  :root {
+    --bg: #eff0f3;
+    --card: #fffffe;
+    --text: #0d0d0d;
+    --border: #0d0d0d;
+    --orange: #ff8e3c;
+    --pink: #d9376e;
+  }
 
-    /* Product Card */
-    .card {
-      background: white;
-      border: 2px solid #111827;
-      border-radius: 1rem;
-      box-shadow: 0 6px 0 #111827;
-      transition: all 0.25s ease;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-    }
+  body { 
+    background: var(--bg); 
+    color: var(--text);
+    padding-bottom: 80px; /* agar konten tidak ketutupan footer */
+  }
 
-    .card:hover {
-      transform: translateY(-6px);
-      box-shadow: 0 10px 0 #0f172a;
-    }
+  .brutal {
+    border: 3px solid var(--border);
+    box-shadow: 6px 6px 0 var(--border);
+  }
 
-    /* Button */
-    .btn {
-      border: 2px solid #111827;
-      background-color: #1e3a8a;
-      color: white;
-      font-weight: 700;
-      border-radius: 0.5rem;
-      box-shadow: 4px 4px 0 #111827;
-      transition: all 0.15s ease-in-out;
-      width: 100%;
-      text-align: center;
-    }
+  select, input {
+    background: var(--card);
+    color: var(--text);
+    border-color: var(--border);
+  }
 
-    .btn:hover {
-      background-color: #2563eb;
-      transform: translate(-2px, -2px);
-      box-shadow: 6px 6px 0 #111827;
-    }
+  /* PULSE NAVBAR BUTTON */
+  @keyframes pulseDuo {
+    0% { transform: scale(1); background: var(--orange); }
+    50% { transform: scale(1.08); background: var(--pink); }
+    100% { transform: scale(1); background: var(--orange); }
+  }
+  .pulse {
+    animation: pulseDuo 1.2s infinite ease-in-out;
+  }
 
-    select, input {
-      border: 2px solid #111827;
-      border-radius: 0.5rem;
-      padding: 0.6rem;
-      width: 100%;
-      transition: 0.2s;
-    }
+  /* PESAN BUTTON ORANGE */
+  .pesan-btn {
+    background: var(--orange) !important;
+    color: #fffffe !important;
+    font-weight: bold;
+    border: 3px solid var(--border) !important;
+    box-shadow: 4px 4px 0 var(--border) !important;
+    transition: 0.15s ease !important;
+  }
+  .pesan-btn:hover {
+    transform: translateY(-3px) !important;
+    box-shadow: 6px 6px 0 var(--border) !important;
+  }
+  .pesan-btn:active {
+    transform: translateY(2px) !important;
+    box-shadow: 2px 2px 0 var(--border) !important;
+  }
 
-    select:focus, input:focus {
-      border-color: #2563eb;
-      box-shadow: 0 0 0 3px rgba(37,99,235,0.3);
-      outline: none;
-    }
+  /* FOOTER STICKY */
+  footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: var(--pink);
+    color: #ffffff;
+    text-align: center;
+    padding: 10px 0;
+    font-weight: bold;
+    border-top: 3px solid var(--border);
+    box-shadow: 0 -4px 0 var(--border);
+    z-index: 50;
+  }
+</style>
 
-    footer {
-      background: white;
-      border-top: 3px solid #111827;
-      box-shadow: 0 -4px 0 #111827;
-    }
-
-    /* RESPONSIVE */
-    @media (max-width: 768px) {
-      header { padding: 2rem 1rem; }
-      .card { padding: 1rem; max-width: 95%; margin: 0 auto; }
-      .btn { font-size: 0.95rem; padding: 0.6rem 1rem; }
-    }
-  </style>
 </head>
-
 <body>
-  <!-- HEADER -->
-  <header>
-    <h1 class="text-4xl sm:text-5xl font-extrabold drop-shadow-lg">TOSERBA DIGITAL</h1>
-    <p class="mt-2 text-base sm:text-lg text-blue-100 font-medium">
-      Langganan digital & hiburan — satu tempat untuk semuanya 💙
-    </p>
-  </header>
 
-  <!-- PRODUK -->
-  <main class="max-w-6xl mx-auto px-5 py-10">
-    <h2 class="text-2xl font-bold mb-8 text-center text-indigo-900">✨ Produk Populer ✨</h2>
-    <div id="product-grid" class="grid gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"></div>
-  </main>
-
-  <!-- FOOTER -->
-  <footer class="py-6">
-    <div class="max-w-6xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left">
-      <p class="font-semibold text-gray-800 text-sm sm:text-base">Web masih dalam tahap pengembangan 💫</p>
-      <p class="font-semibold text-gray-800 text-sm sm:text-base">© 2025 TOSERBA DIGITAL — made with 💙 by D</p>
-      <a href="https://wa.me/6287775787888" target="_blank" class="btn px-4 py-2 sm:w-auto w-3/4 mx-auto sm:mx-0">💬 Chat WhatsApp</a>
+<!-- NAVBAR -->
+<div class="bg-[var(--pink)] text-white py-4 brutal">
+  <nav class="max-w-6xl mx-auto px-5 flex justify-between items-center">
+    <div>
+      <h1 class="text-xl font-extrabold uppercase">TOSERBA DIGITAL</h1>
+      <p class="text-[12px] opacity-90 -mt-1 uppercase">APLIKASI PREMIUM</p>
     </div>
-  </footer>
 
-  <script>
-    const PRODUCTS = [
-      {
-        name: "Netflix",
-        plans: [
-          { label: "HD (HP) – 1 Bulan - Full Garansi", price: 38000 },
-          { label: "HD (TV) – 1 Bulan - Full Garansi", price: 45000 },
-          { label: "4K UHD (HP) – 1 Bulan - Full Garansi", price: 42000 },
-          { label: "4K UHD (TV) – 1 Bulan - Full Garansi", price: 48000 }
-        ],
-        desc: "Nonton film & serial TV favorit tanpa batas, kualitas HD hingga 4K UHD."
-      },
-      {
-        name: "Canva Pro",
-        plans: [
-          { label: "1 Bulan", price: 15000 },
-          { label: "3 Bulan", price: 40000 }
-        ],
-        desc: "Desain profesional untuk media sosial, presentasi, dan proyek kerja."
-      },
-      {
-        name: "YouTube Premium",
-        plans: [
-          { label: "1 Bulan", price: 15000 },
-          { label: "3 Bulan", price: 40000 },
-          { label: "6 Bulan", price: 65000 },
-          { label: "1 Bulan - Family", price: 65000 }
-        ],
-        desc: "YouTube bebas iklan, video bisa diunduh & akses YouTube Music."
-      },
-      {
-        name: "ChatGPT Pro",
-        plans: [{ label: "1 Bulan", price: 45000 }],
-        desc: "Akses GPT-Pro dengan kecepatan tinggi dan performa maksimal."
-      },
-      {
-        name: "Spotify Premium",
-        plans: [{ label: "1 Bulan (RJ)", price: 18000 }],
-        desc: "Streaming musik bebas iklan, kualitas tinggi, dan bisa offline."
-      },
-      {
-        name: "CapCut Pro",
-        plans: [
-          { label: "1 Bulan - Garansi 15 Hari (RJ)", price: 37000 },
-          { label: "30 Hari - Garansi 7 Hari (RJ)", price: 27000 }
-        ],
-        desc: "Edit video profesional tanpa watermark, fitur premium terbuka penuh."
-      },
-      {
-        name: "Picsart Premium",
-        plans: [
-          { label: "1 Bulan Sharing (PR)", price: 15000 },
-          { label: "1 Bulan Private (PR)", price: 22000 }
-        ],
-        desc: "Edit foto & video kreatif dengan semua fitur premium terbuka."
-      },
-      {
-        name: "Lightroom Premium",
-        plans: [{ label: "1 Tahun (PR)", price: 77000 }],
-        desc: "Edit foto profesional dengan Adobe Lightroom, akses cloud & preset premium."
-      }
-    ];
+    <a href="food.html" class="brutal text-white px-3 py-2 font-bold text-sm pulse">
+      Makanan Murah
+    </a>
+  </nav>
+</div>
 
-    const WHATSAPP_NUMBER = "6287775787888";
+<!-- SEARCH BAR -->
+<div class="max-w-6xl mx-auto px-5 py-4 flex gap-3 flex-col sm:flex-row">
+  <input id="search" type="text" placeholder="Cari produk..."
+    class="brutal px-3 py-2 text-sm flex-1" oninput="render()" />
 
-    const priceIDR = n => new Intl.NumberFormat("id-ID", {
-      style: "currency",
-      currency: "IDR",
-      maximumFractionDigits: 0
-    }).format(n);
+  <select id="filterKategori"
+    class="brutal px-3 py-2 text-sm w-full sm:w-52"
+    onchange="render()"></select>
+</div>
 
-    function renderProducts() {
-      const grid = document.getElementById("product-grid");
-      grid.innerHTML = PRODUCTS.map((p, idx) => `
-        <div class="card p-6">
-          <div>
-            <h3 class="text-lg sm:text-xl font-extrabold mb-1 text-indigo-800">${p.name}</h3>
-            <p class="text-sm text-gray-700 mb-4">${p.desc}</p>
-            <label class="block mb-3">
-              <span class="font-semibold text-sm">Paket</span>
-              <select id="plan-${idx}" class="mt-1">
-                ${p.plans.map((pl, i) => `<option value="${i}">${pl.label} — ${priceIDR(pl.price)}</option>`).join("")}
-              </select>
-            </label>
-            <label class="block mb-3">
-              <span class="font-semibold text-sm">Qty</span>
-              <input id="qty-${idx}" type="number" min="1" value="1" />
-            </label>
-          </div>
-          <button onclick="buy(${idx})" class="btn mt-3 py-2">🛒 Beli via WhatsApp</button>
+<!-- PRODUK GRID -->
+<div id="produkList"
+  class="max-w-6xl mx-auto px-5 py-6 grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-6"></div>
+
+<script>
+let kategoriList = JSON.parse(localStorage.getItem("kategoriList")) || [];
+document.getElementById("filterKategori").innerHTML =
+  `<option value="">Semua</option>` +
+  kategoriList.map(k => `<option>${k}</option>`).join("");
+
+let produk = JSON.parse(localStorage.getItem("produk")) || [];
+
+function render() {
+  const wrap = document.getElementById("produkList");
+  wrap.innerHTML = "";
+
+  const searchVal = document.getElementById("search").value.toLowerCase();
+  const kategori = document.getElementById("filterKategori").value;
+
+  produk
+    .filter(
+      p =>
+        p.nama.toLowerCase().includes(searchVal) &&
+        (kategori === "" || p.kategori === kategori)
+    )
+    .forEach((p, idx) => {
+
+      let opsi = p.paket.map(pk =>
+        `<option>${pk.nama} — Rp ${pk.harga}</option>`
+      ).join("");
+
+      let fotoHTML = p.foto
+        ? `<img src="${p.foto}" class="w-full h-40 object-cover brutal mb-3">`
+        : "";
+
+      wrap.innerHTML += `
+        <div class="brutal bg-[var(--card)] p-3">
+
+          ${fotoHTML}
+
+          <h3 class="font-extrabold text-sm uppercase">${p.nama}</h3>
+          <p class="text-xs mt-1">${p.deskripsi}</p>
+          <p class="text-[10px] opacity-70 mb-2"><b>${p.kategori}</b></p>
+
+          <select id="paket_${idx}" class="brutal px-2 py-1 w-full text-xs">${opsi}</select>
+
+          <button class="brutal pesan-btn w-full mt-3 py-2 text-xs font-bold"
+                  onclick="pesan('${p.nama}', 'paket_${idx}')">
+            PESAN
+          </button>
+
         </div>
-      `).join("");
-    }
+      `;
+    });
+}
 
-    function buy(idx) {
-      const p = PRODUCTS[idx];
-      const planIdx = +document.getElementById(`plan-${idx}`).value;
-      const qty = Math.max(1, parseInt(document.getElementById(`qty-${idx}`).value || "1"));
-      const plan = p.plans[planIdx].label;
-      const msg = `Halo kak, aku mau order ${p.name} — Paket: ${plan} — Qty: ${qty}.`;
-      window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`, "_blank");
-    }
+function pesan(namaProduk, paketID) {
+  const val = document.getElementById(paketID).value;
+  const url =
+    `https://wa.me/6287775787888?text=` +
+    encodeURIComponent(`Halo saya mau pesan ${namaProduk} (${val})`);
+  window.open(url, "_blank");
+}
 
-    renderProducts();
-  </script>
+render();
+</script>
+
+<!-- FOOTER -->
+<footer class="brutal">
+  Toserba Digital © 2025
+</footer>
+
 </body>
 </html>
